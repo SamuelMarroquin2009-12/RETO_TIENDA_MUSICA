@@ -39,3 +39,37 @@ class Disc:
     def __str__(self) -> str:
         songs = ", ".join(self.song_list)
         return f"SID: {self.sid}\nTitle: {self.title}\nArtist: {self.artist}\nSong List: {songs}"
+
+class MusicStore:
+    def __init__(self):
+        self.discs = {}
+    def add_disc(self, sid: str, title: str, artist: str, sale_price: float, purchase_price: float, quantity: int):
+        if sid not in self.discs:
+            nuevo_disco = Disc(sid, title, artist, sale_price, purchase_price, quantity)
+            self.discs[sid] = nuevo_disco
+    def search_by_sid(self, sid: str):
+        return self.discs.get(sid, None)
+    def search_by_artist(self, artist: str) -> list:
+        return [d for d in self.discs.values() if d.artist == artist]
+    def sell_disc(self, sid: str, copies: int) -> bool:
+        disc = self.search_by_sid(sid)
+        if disc is None:
+            return False
+        return disc.sell(copies)
+    def supply_disc(self, sid: str, copies: int) -> bool:
+        disc = self.search_by_sid(sid)
+        if disc is None:
+            return False
+        disc.supply(copies)
+        return True
+    def worst_selling_disc(self):
+        if not self.discs:
+            return None
+        peor_disco = None
+        menor_cantidad = float('inf')
+        for disc in self.discs.values():
+            vendidos = disc.copies_sold()
+            if vendidos < menor_cantidad:
+                menor_cantidad = vendidos
+                peor_disco = disc
+        return peor_disco
