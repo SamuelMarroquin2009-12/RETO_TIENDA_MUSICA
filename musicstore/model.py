@@ -49,14 +49,18 @@ class MusicStore:
             self.discs[sid] = nuevo_disco
     def search_by_sid(self, sid: str):
         return self.discs.get(sid, None)
-    def search_by_artist(self, artist: str) -> list:
-        return [d for d in self.discs.values() if d.artist == artist]
-    def sell_disc(self, sid: str, copies: int) -> bool:
+    def search_by_artist(self, artist: str):
+        resultado = []
+        for disco in self.discs.values():
+            if disco.artist == artist:
+                resultado.append(disco)
+        return resultado
+    def sell_disc(self, sid: str, copies: int):
         disc = self.search_by_sid(sid)
         if disc is None:
             return False
         return disc.sell(copies)
-    def supply_disc(self, sid: str, copies: int) -> bool:
+    def supply_disc(self, sid: str, copies: int):
         disc = self.search_by_sid(sid)
         if disc is None:
             return False
@@ -66,10 +70,11 @@ class MusicStore:
         if not self.discs:
             return None
         peor_disco = None
-        menor_cantidad = float('inf')
-        for disc in self.discs.values():
-            vendidos = disc.copies_sold()
-            if vendidos < menor_cantidad:
-                menor_cantidad = vendidos
-                peor_disco = disc
+        # Inicializamos con un número muy alto para encontrar el mínimo
+        menor_ventas = float('inf')
+        for disco in self.discs.values():
+            vendidos = disco.copies_sold()
+            if vendidos < menor_ventas:
+                menor_ventas = vendidos
+                peor_disco = disco
         return peor_disco
