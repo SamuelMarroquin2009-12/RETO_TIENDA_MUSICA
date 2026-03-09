@@ -4,7 +4,6 @@ from datetime import datetime
 class Transaction:
     SELL = 1
     SUPPLY = 2
-
     def __init__(self, type: int, copies: int):
         self.type = type
         self.copies = copies
@@ -21,7 +20,7 @@ class Disc:
         self.song_list = []
     def add_song(self, song: str):
         self.song_list.append(song)
-    def sell(self, copies: int) -> bool:
+    def sell(self, copies: int):
         if copies > self.quantity:
             return False
         self.quantity -= copies
@@ -32,16 +31,15 @@ class Disc:
         self.quantity += copies
         new_transaction = Transaction(Transaction.SUPPLY, copies)
         self.transactions.append(new_transaction)
-    def copies_sold(self) -> int:
+    def copies_sold(self):
         total = 0
         for t in self.transactions:
             if t.type == Transaction.SELL:
                 total += t.copies
         return total
-    def __str__(self) -> str:
+    def __str__(self):
         songs = ", ".join(self.song_list)
         return f"SID: {self.sid}\nTitle: {self.title}\nArtist: {self.artist}\nSong List: {songs}"
-
 class MusicStore:
     def __init__(self):
         self.discs = {}
